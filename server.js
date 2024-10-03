@@ -71,6 +71,36 @@ app.post("/api/v1/cars", (req, res) => {
   });
 });
 
+app.get("/api/v1/cars/:id", (req, res) => {
+  // Select * from fsw 2 where id = "1" or name = "YOGI"
+  console.log(req.params.id);
+  // const newCar = req.body;
+
+  const id = req.params.id * 1;
+
+  const car = cars.find((car) => car.id === id);
+
+  //  salah satu basic error handling
+
+  if (!car) {
+    return res.status(404).json({
+      status: "Failed",
+      message: `Failed get data get car data this id: ${id}`,
+      isSuccess: false,
+      data: null,
+    });
+  }
+
+  // cars.push(newCar);
+
+  return res.status(200).json({
+    status: "201",
+    message: "Success add new cars data",
+    isSuccess: true,
+    data: { car },
+  });
+});
+
 app.get("/rafly", (req, res) => {
   res.status(200).json({
     status: "200",
