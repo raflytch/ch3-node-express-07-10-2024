@@ -101,6 +101,81 @@ app.get("/api/v1/cars/:id", (req, res) => {
   });
 });
 
+app.patch("/api/v1/cars/:id", (req, res) => {
+  const id = req.params.id * 1;
+
+  const { name, year, type, model } = req.body;
+
+  const car = cars.find((car) => car.id === id);
+
+  const carIndex = cars.findIndex((car) => car.id === id);
+  cars[carIndex] = { ...cars[carIndex], ...req.body };
+
+  // Masukkan atau Rewrite data JSON DALAM FILE
+
+  if (!car) {
+    return res.status(404).json({
+      status: "Failed",
+      message: `Failed get data get car data this id: ${id}`,
+      isSuccess: false,
+      data: null,
+    });
+  }
+
+  fs.writeFile(
+    `${__dirname}/assets/data/cars.json`,
+    JSON.stringify(cars),
+    (err) => {
+      res.status(200).json({
+        status: "200",
+        message: "Success update cars data",
+        isSuccess: true,
+        data: {
+          car: cars[carIndex],
+        },
+      });
+    }
+  );
+});
+
+// Delete a car from the database
+app.delete("/api/v1/cars/:id", (req, res) => {
+  const id = req.params.id * 1;
+
+  const { name, year, type, model } = req.body;
+
+  const car = cars.find((car) => car.id === id);
+
+  const carIndex = cars.findIndex((car) => car.id === id);
+  cars[carIndex] = { ...cars[carIndex], ...req.body };
+
+  cars.splice(carIndex, 1);
+
+  if (!car) {
+    return res.status(404).json({
+      status: "Failed",
+      message: `Failed get data get car data this id: ${id}`,
+      isSuccess: false,
+      data: null,
+    });
+  }
+
+  fs.writeFile(
+    `${__dirname}/assets/data/cars.json`,
+    JSON.stringify(cars),
+    (err) => {
+      res.status(200).json({
+        status: "200",
+        message: "Success delete cars data",
+        isSuccess: true,
+        data: {
+          car,
+        },
+      });
+    }
+  );
+});
+
 app.get("/rafly", (req, res) => {
   res.status(200).json({
     status: "200",
